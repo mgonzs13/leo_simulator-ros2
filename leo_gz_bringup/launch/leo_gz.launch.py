@@ -24,9 +24,8 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument
-from launch.actions import IncludeLaunchDescription
-from launch.actions import AppendEnvironmentVariable
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import SetEnvironmentVariable, AppendEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -86,14 +85,26 @@ def generate_launch_description():
     world_models = os.path.join(get_package_share_directory('leo_gz_worlds'), 'models')
     world_sdf = os.path.join(get_package_share_directory('leo_gz_worlds'), 'worlds')
 
-    set_env_var = AppendEnvironmentVariable(
-        'GZ_SIM_RESOURCE_PATH',
-        f"{robot_desc}:{world_models}:{world_sdf}"
+    gz_resource_env = SetEnvironmentVariable(
+        name='GZ_SIM_RESOURCE_PATH',
+        value=':'.join([
+            robot_desc,
+            world_models,
+            world_sdf,
+        ])
+    )
+
+    gz_plugin_env = SetEnvironmentVariable(
+        name='GZ_GUI_PLUGIN_PATH',
+        value=':'.join([
+            os.path.join(get_package_share_directory('leo_gz_plugins'), 'lib'),
+        ])
     )
 
     return LaunchDescription(
         [
-            set_env_var,
+            gz_resource_env,
+            gz_plugin_env,
             sim_world,
             robot_ns,
             gz_sim,
