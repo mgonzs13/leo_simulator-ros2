@@ -26,6 +26,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
+from launch.actions import AppendEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -80,8 +81,19 @@ def generate_launch_description():
         output="screen",
     )
 
+    # Set Gazebo resource path environment variable
+    robot_desc = os.path.dirname(get_package_share_directory('leo_description'))
+    world_models = os.path.join(get_package_share_directory('leo_gz_worlds'), 'models')
+    world_sdf = os.path.join(get_package_share_directory('leo_gz_worlds'), 'worlds')
+
+    set_env_var = AppendEnvironmentVariable(
+        'GZ_SIM_RESOURCE_PATH',
+        f"{robot_desc}:{world_models}:{world_sdf}"
+    )
+
     return LaunchDescription(
         [
+            set_env_var,
             sim_world,
             robot_ns,
             gz_sim,
