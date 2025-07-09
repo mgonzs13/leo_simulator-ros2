@@ -91,6 +91,12 @@ def spawn_robot(context: LaunchContext, namespace: LaunchConfiguration):
             robot_ns + "/imu/data_raw@sensor_msgs/msg/Imu[ignition.msgs.IMU",
             robot_ns
             + "/camera/camera_info@sensor_msgs/msg/CameraInfo[ignition.msgs.CameraInfo",
+            robot_ns + "/asus/camera/image@sensor_msgs/msg/Image[gz.msgs.Image",
+            robot_ns + "/asus/camera/depth_image@sensor_msgs/msg/Image[gz.msgs.Image",
+            robot_ns
+            + "/asus/camera/camera_info@sensor_msgs/msg/CameraInfo[gz.msgs.CameraInfo",
+            robot_ns
+            + "/asus/camera/points@sensor_msgs/msg/PointCloud2[gz.msgs.PointCloudPacked",
             robot_ns + "/joint_states@sensor_msgs/msg/JointState[ignition.msgs.Model",
         ],
         parameters=[
